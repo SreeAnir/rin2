@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('role')->default(2)->after('password'); // 1 for admin, 2 for user
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->timestamp('expire_on')->nullable()->after('note');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('notifications', function (Blueprint $table) {
+            $table->dropColumn('expire_on');
         });
     }
 };

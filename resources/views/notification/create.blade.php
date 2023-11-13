@@ -42,6 +42,18 @@
         </div>
     </div>
     
+    <div class="form-group row">
+        <label for="phone" class="col-sm-2 col-form-label">Message</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control datepicker" id="expired_on" name="expired_on" autocomplete="off">
+            @error('phone')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+    </div>
+    
 
     <div class="form-group row">
         <label for="phone" class="col-sm-2 col-form-label">Users</label>
@@ -82,9 +94,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+ 
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
+
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd', // Adjust the format as needed
+            autoclose: true
+        });
         $('#users').select2({
             placeholder: "Select",
             allowClear: true

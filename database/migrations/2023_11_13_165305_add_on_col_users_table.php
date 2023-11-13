@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('role')->default(2)->after('password'); // 1 for admin, 2 for user
+            $table->boolean('notification_switch')->default(true)->after('password');
+            $table->string('phone_number',15)->nullable()->after('password');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropColumn('notification_switch');
+            $table->dropColumn('phone_number') ;
         });
     }
 };
