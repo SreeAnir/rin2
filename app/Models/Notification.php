@@ -21,7 +21,7 @@ class Notification extends Model
      */
     protected $fillable = [
         'notification_type',
-        'note',
+        'note','expire_on'
     ];
 
     public static function getTypeList()

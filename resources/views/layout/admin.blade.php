@@ -44,6 +44,7 @@
 </nav>
 
 <div class="container mt-3">
+  @include('layout.common.session_messages')
     @yield('content')
 </div>
 

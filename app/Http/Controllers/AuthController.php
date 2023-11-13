@@ -22,8 +22,7 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        $credentials['password'] = 'password';
-        var_dump($credentials);
+        // $credentials['password'] = 'password';
         if ( Auth::guard('admin')->attempt( $credentials )) {
             $request->session()->regenerate();
 
@@ -45,4 +44,10 @@ class AuthController extends Controller
         Auth::guard('admin')->logout();
     return redirect('/login');
     }
+    public function userlogout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        return redirect(route('admin.index'));
+    }
+    
 }

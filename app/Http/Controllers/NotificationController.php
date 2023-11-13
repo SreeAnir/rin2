@@ -102,13 +102,14 @@ class NotificationController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(NotificationRequest $request)
-    {
+    { 
         try {
             DB::beginTransaction();
         $validatedData = $request->getData();
         $notification = Notification::create([
             'notification_type' => $validatedData['notification_type'],
             'note' => $validatedData['note'],
+            'expire_on' => $validatedData['expire_on'],
         ]);
         if ($validatedData['users'] == 'all') {
             $users = User::pluck('id')->toArray();
@@ -116,13 +117,13 @@ class NotificationController extends Controller
         } else {
             $notification->users()->attach($validatedData['users']);
         }
-        DB::commit();
-                return response()->json(['status' => "success", 'message' => "Sent Notification to users", 'message_title' => "Success"], 200);
+            DB::commit();
+        return response()->json(['status' => "success", 'message' => "Sent Notification to users", 'message_title' => "Success"], 200);
 
          }
         catch (Exception $e) { 
             DB::rollback();
-            return response()->json(['status' => "error", 'message' => "Failed to send notification", 'message_title' => "Failed"], 200);
+        return response()->json(['status' => "error", 'message' => "Failed to send notification", 'message_title' => "Failed"], 200);
 
         } 
          

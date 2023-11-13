@@ -46,6 +46,9 @@ Route::get('notifications/list', [NotificationController::class, 'getNotificatio
 
 Route::get('user/settings', [UserController::class, 'settings'])->name('user.settings');
 Route::put('user/settings', [UserController::class, 'updateSettings'])->name('update.user.settings');
+Route::post('user/set_read', [UserController::class, 'setRead'])->name('user.set_read');
+
+
 });
 
 
@@ -59,3 +62,4 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authe
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
+Route::post('/user-logout', [AuthController::class, 'userlogout'])->name('user.logout');

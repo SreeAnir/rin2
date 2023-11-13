@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Laravel 8|7 Datatables Tutorial</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"/>
-    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layout.app')
+@section('title', 'Welcome')
+@section('content')
     
- <div class="container p-2 w-50 mt-3">
-  <div class="row bg-light p-4">
+  <div class="card bg-light p-4">
   <form action="{{ route('update.user.settings') }}" method="POST">
     @csrf
   <h1 class="h3 mb-3 fw-normal">Hello , {{ @$user->name }}</h1>
@@ -44,7 +36,7 @@
     <div class="form-group row">
       
 
-      <div class="col-sm-9">
+      <div class="col-sm-6">
         <div> Update Notification Set up.You will recieve on screen notificaiton only if this is enabled.</div>
       </div>
       <div class="col-sm-3">
@@ -58,15 +50,18 @@
       
     </div>  
   </div>
-    <button class="float-right btn btn-lg btn-info mx-2" type="submit">Go to User</button>
-    <button class="float-right btn btn-lg btn-info" type="submit">Update Settings</button>
+  <div class="form-group row">
+      
 
+    <div class="col-sm-8">
+    {{-- <button class="float-right btn btn-lg btn-info mx-2" type="submit">Go to User</button> --}}
+    <button class="float-right btn btn-lg btn-info" type="submit">Update Settings</button>
+    </div>
   </form> 
 </div>
-<div class="row" ><a href="{{ route('users.list')}}"> To Home </a></div>
-</div>
+@endsection
+@push('scripts')
 
-</body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
   <script>
@@ -83,5 +78,5 @@
             });
         });
     </script>
-</html>
   
+@endpush

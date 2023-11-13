@@ -26,7 +26,8 @@ class NotificationRequest extends FormRequest
                 'notification_type' => 'required|integer',
                 'note' => 'nullable|string|max:150',
                 'users.*' => 'required',
-            ];
+                'expire_on' => 'nullable' 
+             ];
     }
 
     public function getData()

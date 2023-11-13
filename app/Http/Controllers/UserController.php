@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\NotificationUser;
+use App\Models\Notification;
+
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\DB;
+
 class UserController extends Controller
 {
     /**
@@ -29,17 +33,18 @@ class UserController extends Controller
     {
         try{
           
-            try {
-                Auth::guard('web')->loginUsingId($user->id);
-                $user =  auth()->guard('web')->user();
-                $notifications = NotificationUser::with('Notification')->latest()->where('user_id' , auth()->user()->id )->get();
-                return view('user.profile',compact('user','notifications'));
-            } catch (Exception $e) {
-                $response = ['status' => 'error', 'message' => $e->getMessage()];
-                return redirect()->back()->with($response);
-            }
+            Auth::guard('web')->loginUsingId($user->id);
+            $user =  auth()->guard('web')->user();
+            // $notifications = NotificationUser::with('Notification')->latest()->where('user_id' , auth()->user()->id )->unread()->available()->get();
+            $notifications = Notification::whereHas('users', function ($query) {
+                $query->where('read_at',null )->where(function ($query) {
+                    $query->whereNull('expire_on')
+                        ->orWhere('expire_on', '>', now()); // Assuming 'expire_on' is a timestamp
+                });
+            })->get();
+            return view('user.profile',compact('user','notifications'));
         }catch(Exception $ex){
-            $response = ['status' => 'error', 'message' => $e->getMessage()];
+            $response = ['status' => 'error', 'message' => $ex->getMessage()];
             return redirect()->back()->with($response);
         }
     }
@@ -50,7 +55,6 @@ class UserController extends Controller
     public function settings(Request $request)
     {
         $user =  auth()->guard('web')->user();
-        // $user = auth()->user();
         return view('user.settings',compact('user'));
     }
 
@@ -59,6 +63,21 @@ class UserController extends Controller
         $user = auth()->user();
         return view('user.settings',compact('user'));
     }
+    public function setRead(Request $request)
+    {
+        try{
+            DB::beginTransaction();
+            $notification_user = $request->notification_user ;
+            $notifications = DB::table('notification_users')->where( 'notification_id',$request->notification_user)->update(['read_at' => now()]);
+            DB::commit();
+            return response()->json(['status' => "success", 'message' => "Marked as read", 'message_title' => "Success"], 200);
+        }
+       catch (Exception $e) { 
+           DB::rollback();
+        return response()->json(['status' => "error", 'message' => "Failed to Mark as read", 'message_title' => "Failed","err"=> $e->getMessage()], 200);
+        }
+    }
+
     
     
 }
