@@ -10,6 +10,10 @@ use DataTables;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
    /* List out users */
     public function index(UsersDataTable $dataTable)
     {
@@ -32,11 +36,11 @@ class AdminController extends Controller
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){
-                    return $row->unreadNotifications->count();
+                    return  $row->unreadNotifications->count();
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
     }
-
+  
 }

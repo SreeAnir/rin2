@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
-            'is_admin' => true,
+            'role' => 1,
         ]);
 
         for ($i = 1; $i <= 10; $i++) {
@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'User ' . $i,
                 'email' => 'user' . $i . '@example.com',
                 'password' => Hash::make('password'),
-                'is_admin' => false,
+                'role' => 2,
             ]);
         }
     }

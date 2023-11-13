@@ -12,6 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,21 +46,50 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
     
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+    
     /**
      * all notifications for the user.
      */
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
+    // public function notifications()
+    // {
+    //     return $this->hasMany(Notification::class);
+    // }
 
     
     /**
      * unread notifications for the user.
      */
+    // public function unreadNotifications()
+    // {
+    //     return $this->notifications();
+    // }
+    // public function notifications()
+    // {
+    //     return $this->belongsToMany(Notification::class);
+    // }
+
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'notification_users')
+            ->withPivot('read_at')
+            ->withTimestamps();
+    }
     public function unreadNotifications()
     {
-        return $this->notifications()->whereNull('read_at');
+        return $this->notifications()
+            ->whereHas('notificationUsers', function ($query) {
+                $query->whereNull('read_at');
+            });
     }
-
+    
+    public function scopeUsers($query)
+    { 
+        return $query->where('role',  self::ROLE_USER);
+    }
+    
+    
 }

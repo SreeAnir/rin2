@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 
 
 /*
@@ -22,9 +23,31 @@ use App\Http\Controllers\UserController;
 //     return view('welcome');
 // })->middleware('auth');
 
-Route::get('/', [AdminController::class, 'index'])->middleware('auth')->name('admin.index');
-Route::get('users/list', [AdminController::class, 'getUsers'])->middleware('auth')->name('users.list');
-Route::get('impersonate/{user}', [UserController::class, 'impersonate'])->middleware('auth')->name('impersonate');
+Route::middleware('auth:admin')->group(function () {
+    // Your admin-only routes go here
+    
+Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+Route::get('users/list', [AdminController::class, 'getUsers'])->name('users.list');
+Route::get('notifications/create', [NotificationController::class, 'create'])->name('notifications.create');
+Route::post('notifications/store', [NotificationController::class, 'store'])->name('notification.store');
+
+
+Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications');
+Route::get('impersonate/{user}', [UserController::class, 'impersonate'])->name('impersonate');
+Route::get('admin/notifications/list', [NotificationController::class, 'getAllNotifications'])->name('admin.notification.list');
+
+});
+
+Route::middleware('auth:web')->group(function () {
+    // Your admin-only routes go here
+Route::get('user/notifications', [NotificationController::class, 'index'])->name('user.notifications');
+Route::get('notifications/list', [NotificationController::class, 'getNotifications'])->name('notification.list');
+
+
+Route::get('user/settings', [UserController::class, 'settings'])->name('user.settings');
+Route::put('user/settings', [UserController::class, 'updateSettings'])->name('update.user.settings');
+});
+
 
 
 
@@ -35,4 +58,4 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authe
 
 
 // Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');

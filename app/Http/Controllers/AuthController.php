@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    
+    
     public function login()
     {
         return view('auth.login');
@@ -15,12 +17,14 @@ class AuthController extends Controller
     
     public function authenticate(Request $request)
     {
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
-        if (Auth::attempt($credentials)) {
+        $credentials['password'] = 'password';
+        var_dump($credentials);
+        if ( Auth::guard('admin')->attempt( $credentials )) {
             $request->session()->regenerate();
 
             return redirect()->intended('/');
@@ -36,8 +40,9 @@ class AuthController extends Controller
         # code...
     }
 
-    public function lgout(Request $request)
+    public function logout(Request $request)
     {
-        # code...
+        Auth::guard('admin')->logout();
+    return redirect('/login');
     }
 }

@@ -9,10 +9,7 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('read_at')->nullable();
-            $table->string('notification_type');
+            $table->smallInteger('notification_type')->default(1);
             $table->text('note');
             $table->timestamps();
         });
@@ -23,3 +20,4 @@ class CreateNotificationsTable extends Migration
         Schema::dropIfExists('notifications');
     }
 }
+ 
