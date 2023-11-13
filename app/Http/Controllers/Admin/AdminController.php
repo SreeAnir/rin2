@@ -32,7 +32,7 @@ class AdminController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                     $actionBtn = '<a href="'. route('impersonate',[$row->id]).'" class="edit btn btn-success btn-sm">Impersonate</a> ';
+                     $actionBtn = '<a  target="_blank"  href="'. route('impersonate',[$row->id]).'" class="edit btn btn-success btn-sm">Impersonate</a> ';
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){

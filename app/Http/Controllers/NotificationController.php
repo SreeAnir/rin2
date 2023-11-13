@@ -23,10 +23,11 @@ class NotificationController extends Controller
     {
         try {
             $user  = auth()->user(); 
-           
+        
             if ($user->isAdmin()) {  
                 return  view("notification.index");
             } else {
+
                 return  view("notification.users-notificaion");
             }
           
@@ -43,7 +44,7 @@ class NotificationController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                     $actionBtn = '<a href="'. route('impersonate',[$row->id]).'" class="edit btn btn-info btn-sm">Read</a> ';
+                     $actionBtn = '<ahref="'. route('impersonate',[$row->id]).'" class="edit btn btn-info btn-sm">Read</a> ';
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){
