@@ -13,7 +13,7 @@
 @section('title', 'Welcome')
 @section('content')
 <div class="container mt-5">
-    <h2 class="mb-4">Users</h2>
+    <h2 class="mb-4">Notifications</h2>
     <!-- In your admin dashboard view -->
     
     <table class="table table-bordered yajra-datatable">
@@ -30,10 +30,12 @@
         </tbody>
     </table>
 </div>
-   
- 
 
 @endsection
+
+@push('styles')
+<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+@endpush
 @push('scripts')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> 
 
@@ -42,6 +44,38 @@
 
 <script>
   $(document).ready(function () {
+
+    $('body').on('click', '.set_read', function (e) {
+            // $(document).('click',function () {
+              let __this = $(this);
+                $.ajax({
+                        url:"{{ route('user.set_read') }}",
+                        type: 'post',
+                        data: {'notification_user' : $(this).attr('id')},
+                        success: function(response) {
+                            if (response.status == "success") {
+                                __this.after(response.time);
+                                __this.remove();
+                            } else {
+                                Swal.fire({
+                                    title: response.message_title,
+                                    text: response.message,
+                                    icon: "error"
+                                });
+                            }
+
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error response
+                            Swal.fire({
+                                title: "Unknown Error",
+                                text: "",
+                                icon: "error"
+                            });
+                        }
+                    });
+            });
+
     $(function () {
     
     var table = $('.yajra-datatable').DataTable({

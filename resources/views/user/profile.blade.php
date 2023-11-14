@@ -13,7 +13,7 @@
             @if($notifications->count() > 0 )
             @foreach($notifications as $not)
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <strong> {{ $not->notificationTypeLabel($not->notification_type) }}</strong>  {{ $not->short }}
+              <strong> {{ $not->notificationTypeLabel($not->notification_type) }}</strong>  {{ $not->note }}
               <button id="{{ $not->id }}"  type="button" class="close set_read"  aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -25,20 +25,21 @@
  @endsection
  @push('scripts')
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  <script>
    $(document).ready(function () {
-    $('body').on('click', '.set_read', function (e) {
+    // $('body').on('click', '.set_read', function (e) {
             // $(document).('click',function () {
-              let patent_wrapper = $(this).parents('.alert');
+            //   let patent_wrapper = $(this).parents('.alert');
+            if($('.set_read').length > 0  ){
+
                 $.ajax({
                         url:"{{ route('user.set_read') }}",
                         type: 'post',
-                        data: {'notification_user' : $(this).attr('id')},
+                        data: {'mark_all' : true },
                         success: function(response) {
                             if (response.status == "success") {
-                               $(patent_wrapper).fadeOut();
+                            //    $(patent_wrapper).fadeOut();
                             } else {
                                 Swal.fire({
                                     title: response.message_title,
@@ -57,7 +58,9 @@
                             });
                         }
                     });
-            });
+            // });
+        }
+
      });
  </script>
  

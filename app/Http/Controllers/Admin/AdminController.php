@@ -33,6 +33,7 @@ class AdminController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                      $actionBtn = '<a  target="_blank"  href="'. route('impersonate',[$row->id]).'" class="edit btn btn-success btn-sm">Impersonate</a> ';
+
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){

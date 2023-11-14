@@ -10,6 +10,7 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -35,13 +36,15 @@ class UserController extends Controller
           
             Auth::guard('web')->loginUsingId($user->id);
             $user =  auth()->guard('web')->user();
-            // $notifications = NotificationUser::with('Notification')->latest()->where('user_id' , auth()->user()->id )->unread()->available()->get();
-            $notifications = Notification::whereHas('users', function ($query) {
-                $query->where('read_at',null )->where(function ($query) {
-                    $query->whereNull('expire_on')
-                        ->orWhere('expire_on', '>', now()); // Assuming 'expire_on' is a timestamp
-                });
-            })->get();
+            $notifications = collect();
+            if($user->notification_switch){ 
+                $notifications = Notification::whereHas('users', function ($query) use( $user) {
+                    $query->where('read_at',null )->where('user_id' , $user->id)->where(function ($query) {
+                        $query->whereNull('expire_on')
+                            ->orWhere('expire_on', '>', now()); // Assuming 'expire_on' is a timestamp
+                    });
+                })->get();
+            }
             return view('user.profile',compact('user','notifications'));
         }catch(Exception $ex){
             $response = ['status' => 'error', 'message' => $ex->getMessage()];
@@ -60,17 +63,22 @@ class UserController extends Controller
 
     public function updateSettings(Request $request)
     {
-        $user = auth()->user();
-        return view('user.settings',compact('user'));
+         //put data to update
     }
     public function setRead(Request $request)
     {
         try{
             DB::beginTransaction();
-            $notification_user = $request->notification_user ;
-            $notifications = DB::table('notification_users')->where( 'notification_id',$request->notification_user)->update(['read_at' => now()]);
+            $time = now() ;
+            if($request->mark_all){
+                $user_id =auth()->guard('web')->user()->id; 
+                $notifications = DB::table('notification_users')->where( 'user_id',$user_id)->whereNull('read_at')->update(['read_at' => $time ]);
+            }else{
+                $notification_user = $request->notification_user ;
+                $notifications = DB::table('notification_users')->where( 'notification_id',$request->notification_user)->update(['read_at' => $time ]);
+            }
             DB::commit();
-            return response()->json(['status' => "success", 'message' => "Marked as read", 'message_title' => "Success"], 200);
+            return response()->json(['status' => "success", 'message' => "Marked as read", 'message_title' => "Success","time" =>   Carbon::parse($time)->format('M j, Y g:i A') ], 200);
         }
        catch (Exception $e) { 
            DB::rollback();

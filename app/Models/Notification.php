@@ -20,8 +20,7 @@ class Notification extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'notification_type',
-        'note','expire_on'
+        'notification_type',  'note','expire_on'
     ];
 
     public static function getTypeList()

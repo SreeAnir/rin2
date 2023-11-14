@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Http\Requests\NotificationRequest;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 use DataTables;
 
@@ -44,7 +45,11 @@ class NotificationController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                     $actionBtn = '<ahref="'. route('impersonate',[$row->id]).'" class="edit btn btn-info btn-sm">Read</a> ';
+                    
+                     if( $row->read_at ==null)
+                     $actionBtn = '<a role="button" id="'.$row->id.'" class="edit  text-info set_read">Mark as Read</a> ';
+                     else 
+                     $actionBtn =  '<a>'. Carbon::parse($row->read_at)->format('M j, Y g:i A') .'<a>';
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){
@@ -67,10 +72,6 @@ class NotificationController extends Controller
             $data = Notification::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
-                     $actionBtn = '<a href="'. route('impersonate',[$row->id]).'" class="edit btn btn-info btn-sm">Read</a> ';
-                    return $actionBtn;
-                })
                 ->addColumn('notification_type_label', function($row){
                     return $row->notificationTypeLabel( $row->notification_type);
                 })
@@ -81,10 +82,9 @@ class NotificationController extends Controller
                     return $row->created_at_format;
                 })
                 
-                    ->addColumn('recipients', function($row){
-                        return ( $row->users->count() > 0 ? implode(',',$row->users->pluck('name')->toArray()):"No Recipients");
-                    })
-                ->rawColumns(['action'])
+                ->addColumn('recipients', function($row){
+                    return ( $row->users->count() > 0 ? implode(',',$row->users->pluck('name')->toArray()):"No Recipients");
+                })
                 ->make(true); 
         }
     }
