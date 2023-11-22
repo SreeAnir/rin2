@@ -52,19 +52,7 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function settings(Request $request)
-    {
-        $user =  auth()->guard('web')->user();
-        return view('user.settings',compact('user'));
-    }
-
-    public function updateSettings(Request $request)
-    {
-         //put data to update
-    }
+   
     public function setRead(Request $request)
     {
         try{

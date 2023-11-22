@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\OtpController;
+
 use App\Http\Controllers\NotificationController;
 
 
@@ -44,8 +48,8 @@ Route::get('user/notifications', [NotificationController::class, 'index'])->name
 Route::get('notifications/list', [NotificationController::class, 'getNotifications'])->name('notification.list');
 
 
-Route::get('user/settings', [UserController::class, 'settings'])->name('user.settings');
-Route::put('user/settings', [UserController::class, 'updateSettings'])->name('update.user.settings');
+Route::get('profile/settings', [ProfileController::class, 'settings'])->name('user.settings');
+Route::put('profile/settings', [ProfileController::class, 'updateSettings'])->name('update.user.settings');
 Route::post('user/set_read', [UserController::class, 'setRead'])->name('user.set_read');
 
 
@@ -53,6 +57,8 @@ Route::post('user/set_read', [UserController::class, 'setRead'])->name('user.set
 
 
 
+Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send.otp');
+Route::post('/verify', [OtpController::class, 'verify'])->name('verify.otp');
 
 
 // Login
