@@ -7,14 +7,13 @@
              <h2 class="mb-4">Welcome {{ @$user->name }}</h2>
              <!-- In your admin dashboard view -->
              <div class="alert alert-primary" role="alert">
-             <h5> You can update your email ,phone and notification settings from  <a role="button" class="text-info" action="{{ route('user.settings') }}"> here</a> </h5>
+             <h5> You can update your email ,phone and notification settings from  <a role="button" class="text-info" href="{{ route('user.settings') }}"> here</a> </h5>
             </div>
-            
             @if($notifications->count() > 0 )
             @foreach($notifications as $not)
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               <strong> {{ $not->notificationTypeLabel($not->notification_type) }}</strong>  {{ $not->note }}
-              <button id="{{ $not->id }}"  type="button" class="close set_read"  aria-label="Close">
+              <button type="button" class="close set_read" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

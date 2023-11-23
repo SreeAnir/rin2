@@ -28,7 +28,7 @@ class AdminController extends Controller
     public function getUsers(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::latest()->get();
+            $data = User::latest()->users()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){

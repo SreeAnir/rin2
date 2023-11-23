@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {  
-        User::observe(EmailChangeObserver::class);
+        // User::observe(EmailChangeObserver::class);
         View::composer('layout.common.app-header', HeaderMenuComposer::class);
     }
 }

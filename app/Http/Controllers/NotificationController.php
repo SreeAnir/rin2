@@ -56,7 +56,8 @@ class NotificationController extends Controller
                     return ($row->read_at ?:"Not Read");
                 })
                 ->addColumn('notification_type', function($row){
-                    return $row->notification->notification_type;
+                    // return $row->notification->notification_type;
+                    return $row->notification->notificationTypeLabel( $row->notification->notification_type);
                 })
                  ->addColumn('note', function($row){
                     return $row->notification->note;
