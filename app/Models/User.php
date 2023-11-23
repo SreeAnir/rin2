@@ -14,7 +14,7 @@ class User extends Authenticatable
 
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
-
+ 
     /**
      * The attributes that are mass assignable.
      *
@@ -24,6 +24,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number',
+        'notification_switch',
+        'role',
+        'email_verified_at'
     ];
 
     /**
@@ -45,6 +49,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($user) {
+    //         $user->phone_number = static::cleanPhoneNumber($user->phone_number);
+    //     });
+        
+    // }
+    protected static function cleanPhoneNumber($phoneNumber)
+    {
+        return preg_replace('/[^0-9]/', '', $phoneNumber);
+    }
+
+    public function setPhoneNumberAttribute($value)
+    {
+        $this->attributes['phone_number'] = static::cleanPhoneNumber($value);
+    }
     
     public function isAdmin()
     {
