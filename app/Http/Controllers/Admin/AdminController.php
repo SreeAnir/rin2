@@ -28,7 +28,7 @@ class AdminController extends Controller
     public function getUsers(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::latest()->users()->get();
+            $data = User::withCount('unreadNotifications')->latest()->users()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -37,7 +37,7 @@ class AdminController extends Controller
                     return $actionBtn;
                 })
                 ->addColumn('unread', function($row){
-                    return  $row->unreadNotifications->count();
+                  return  $row->unread_notifications_count;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
